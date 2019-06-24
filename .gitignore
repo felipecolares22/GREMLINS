@@ -30,3 +30,11 @@
 *.exe
 *.out
 *.app
+
+build/*
+latex/*
+docs/*
+html/*
+include/*.swp
+src/*.swp
+test/*.swp
