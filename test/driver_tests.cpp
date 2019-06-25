@@ -1,7 +1,9 @@
+#include <iostream>
 #include <random>
 #include <algorithm>
 #include <string>
 #include <sstream>
+#include <string.h>
 
 #include "../include/mpool.h"
 #include "mempool_common.h"
@@ -23,7 +25,7 @@ int main()
     const short n_chunks(7); // 7 pieces of 32 bytes
 
     std::cout << ">>> My tests\n\n";
-    // mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
+    mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
 
     std::cout << ">>> Begining DATA INTEGRITY tests...\n\n";
 
@@ -31,11 +33,11 @@ int main()
         // Set up 7 chunks of data.
         // We decrease the area metainfo so we might suppport a single reserved area
         // with the size of the entire pool.
-        mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
-        std::cout << p << std::endl;
+        // mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
+        // std::cout << p << std::endl;
 
-        bool passed(false);
-        byte*  vet[ n_chunks ];  // Array of chunk pointer to be allocated.
+        // bool passed(false);
+        // byte*  vet[ n_chunks ];  // Array of chunk pointer to be allocated.
 
         // Define the chunk length so that it corresponds to two blocks of memory.
         // size_t chunk_len( 2 * BLOCK_SIZE - area_metainfo );
@@ -297,85 +299,85 @@ int main()
    //  // -------------------------------------------------------------------------------------------------------
    //  // -------------------------------------------------------------------------------------------------------
 
-   //  std::cout << ">>> Begining LIST INTEGRITY tests...\n\n";
+    std::cout << ">>> Begining LIST INTEGRITY tests...\n\n";
 
-   //  {
-   //      // Set up 7 chunks of data.
-   //      // We decrease the area metainfo so we might suppport a single reserved area
-   //      // with the size of the entire pool.
-   //      mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
-   //      //std::cout << p << std::endl;
+    {
+        // Set up 7 chunks of data.
+        // We decrease the area metainfo so we might suppport a single reserved area
+        // with the size of the entire pool.
+        mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
+        //std::cout << p << std::endl;
 
-   //      auto passed(true);
-   //      byte *temp;
-   //      try {
-   //          temp = new (p) byte[ sizeof(byte)*chunk*n_chunks ];
-   //      }
-   //      catch( const std::bad_alloc & e )
-   //      {
-   //          passed = false;
-   //      }
-   //      catch( const std::runtime_error & e )
-   //      {
-   //          passed = false;
-   //      }
-   //      std::cout << ">>> Allocating a single block with length equal to the entire pool size... ";
-   //      std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
+        auto passed(true);
+        byte *temp;
+        try {
+            temp = new (p) byte[ sizeof(byte)*chunk*n_chunks ];
+        }
+        catch( const std::bad_alloc & e )
+        {
+            passed = false;
+        }
+        catch( const std::runtime_error & e )
+        {
+            passed = false;
+        }
+        std::cout << ">>> Allocating a single block with length equal to the entire pool size... ";
+        std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
+        
+        delete [] temp;
+    }
 
-   //      delete [] temp;
-   //  }
 
+    // {
+    //     // Set up 7 chunks of data.
+    //     // We decrease the area metainfo so we might suppport a single reserved area
+    //     // with the size of the entire pool.
+    //     mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
+    //     //std::cout << p << std::endl;
 
-   //  {
-   //      // Set up 7 chunks of data.
-   //      // We decrease the area metainfo so we might suppport a single reserved area
-   //      // with the size of the entire pool.
-   //      mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
-   //      //std::cout << p << std::endl;
+    //     bool passed(false);
+    //     byte*  vet[ n_chunks ];  // Array of chunk pointer to be allocated.
 
-   //      bool passed(false);
-   //      byte*  vet[ n_chunks ];  // Array of chunk pointer to be allocated.
+    //     // Define the chunk length so that it corresponds to two blocks of memory.
+    //     size_t chunk_len( 2 * BLOCK_SIZE - area_metainfo );
+    //     //std::cout << ">> individual chunk length: " << chunk_len << std::endl;
 
-   //      // Define the chunk length so that it corresponds to two blocks of memory.
-   //      size_t chunk_len( 2 * BLOCK_SIZE - area_metainfo );
-   //      //std::cout << ">> individual chunk length: " << chunk_len << std::endl;
+    //     // Fill up the cha array with "01234567890123...."
+    //     std::ostringstream oss;
+    //     auto j(0u);
+    //     while( j < chunk_len-1 ) // Remember we have to reserve one extra space for the '\0'.
+    //         oss << (j++%10);
 
-   //      // Fill up the cha array with "01234567890123...."
-   //      std::ostringstream oss;
-   //      auto j(0u);
-   //      while( j < chunk_len-1 ) // Remember we have to reserve one extra space for the '\0'.
-   //          oss << (j++%10);
+    //     // Fill up the MP.
+    //     for( auto i(0) ; i < n_chunks ; ++i )
+    //     {
+    //         vet[i] = new (p) byte [chunk_len];
+    //         strcpy( vet[i], oss.str().c_str() );
+    //     }
+    //     //std::cout << p << std::endl;
 
-   //      // Fill up the MP.
-   //      for( auto i(0) ; i < n_chunks ; ++i )
-   //      {
-   //          vet[i] = new (p) byte [chunk_len];
-   //          strcpy( vet[i], oss.str().c_str() );
-   //      }
-   //      //std::cout << p << std::endl;
+    //     // Request an extra byte to invoke an exception (overflow).
+    //     byte * temp(nullptr);
+    //     try {
+    //         temp = new (p) byte[ chunk_len ];
+    //     }
+    //     catch( std::runtime_error & e )
+    //     {
+    //         passed = true;
+    //     }
+    //     catch( std::bad_alloc & e )
+    //     {
+    //         passed = true;
+    //     }
 
-   //      // Request an extra byte to invoke an exception (overflow).
-   //      byte * temp(nullptr);
-   //      try {
-   //          temp = new (p) byte[ chunk_len ];
-   //      }
-   //      catch( std::runtime_error & e )
-   //      {
-   //          passed = true;
-   //      }
-   //      catch( std::bad_alloc & e )
-   //      {
-   //          passed = true;
-   //      }
-
-   //      std::cout << ">>> Testing pool overflow... ";
-   //      std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
-   //      // \e[1m text in bold \e[0m
-   //      // \e[1m turn on bold
-   //      // \e[0m turn off bold
-   //      // 32 -> green
-   //      // 21 -> red
-   //  }
+    //     std::cout << ">>> Testing pool overflow... ";
+    //     std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
+    //     // \e[1m text in bold \e[0m
+    //     // \e[1m turn on bold
+    //     // \e[0m turn off bold
+    //     // 32 -> green
+    //     // 21 -> red
+    // }
 
    //  {
    //      // Set up 7 chunks of data.

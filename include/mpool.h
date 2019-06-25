@@ -4,6 +4,11 @@
 #include <iostream>
 #include <cmath>
 #include <stdexcept>
+#include <random>
+#include <algorithm>
+#include <string>
+#include <sstream>
+#include <string.h>
 
 namespace mp
 {
@@ -148,9 +153,8 @@ namespace mp
 
 		friend std::ostream& operator<< (std::ostream& stream, const SLPool& obj)
 		{
-			stream << "meu pau animal" << std::endl;
-
-
+			stream << " operator << of SLPool Class is a WIP " << std::endl;
+			
 			return stream;
 		} 
 
