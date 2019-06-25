@@ -1,5 +1,5 @@
 # GREMLINS
-GREMLINS stands for "GeREnciador de Memória com LIsta eNcadeada Simples" a memory manager with single linked lists, in this project our objective is to build a GREMLINS library for C++.
+GREMLINS stands for "GeREnciador de Memória com LIsta eNcadeada Simples" it is a memory manager with single linked lists, in this project our objective is to build a GREMLINS library for C++.
 
 ### Disclaimer
 We're having problems using the test file, althought most of everything seems to be working.
