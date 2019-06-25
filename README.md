@@ -11,7 +11,7 @@ We're having problems using the test file, althought most of everything seems to
 * `Doxygen` (to gerenate code documentation)
 
 ### Usage
-To use the GREMLINS, you will need to import the `mpool.h` and `mempool_common.h` files located on the `include` folder to your project. Look the documentation for a more detailed explanation about the HashTable.
+To use the GREMLINS, you will need to import the `mpool.h` and `mempool_common.h` files located on the `include` folder to your project. Look the documentation for a more detailed explanation about the GREMLINS.
 
 ### Generate Documentation
 Go to the project directory and type
