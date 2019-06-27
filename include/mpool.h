@@ -54,6 +54,7 @@ namespace mp
 		unsigned int m_n_blocks;
 		Block *m_pool;
 		Block &m_sentinel;
+		bool isFull = false;
 
 	public:
 		/// Constructor
@@ -77,7 +78,7 @@ namespace mp
 		{
 			Block *fast = this->m_sentinel.m_next;
 			Block *slow = &this->m_sentinel;
-			size_t num_blocks = std::ceil( static_cast<float>(tot_size)/BLK_SIZE );
+			size_t num_blocks = std::ceil( (tot_size + sizeof( Header ))/BLK_SIZE );
 
 			while( fast != nullptr )
 			{
@@ -85,6 +86,7 @@ namespace mp
 				{
 					slow->m_next = fast->m_next;
 					fast->m_length = num_blocks;
+					isFull = true;
 					return reinterpret_cast< void* >(reinterpret_cast< Header* > (fast) + (1U));
 				}
 				else if(fast->m_length > num_blocks)
@@ -126,7 +128,18 @@ namespace mp
 			}
 
 			Block * pre = fast;
-			Block * pos = fast->m_next;
+			Block * pos = nullptr;
+			if(pre != nullptr)
+				pos = fast->m_next;
+	
+			if(isFull)
+			{
+				m_sentinel.m_next = current;
+				m_sentinel.m_next->m_next = nullptr;
+
+				isFull = false;
+				return;
+			}		
 
 			if(	(current - pre) == (long int)pre->m_length and (pos - current) == (long int)current->m_length )
 			{
