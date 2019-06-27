@@ -9,6 +9,7 @@
 #include <string>
 #include <sstream>
 #include <string.h>
+#include <iomanip>
 
 namespace mp
 {
@@ -167,9 +168,23 @@ namespace mp
 		friend std::ostream& operator<< (std::ostream& stream, const SLPool& obj)
 		{
 			stream << " operator << of SLPool Class is a WIP " << std::endl;
+
+			// Block * fast = obj.m_sentinel.m_next;
+			// Block * first = (Block *)&obj.m_pool[0];
+			// while(fast != nullptr)
+			// {
+			// 	int dif = fast - first;
+			// 	stream << difstd::setw(dif) << std::setfill('#') << "";
+			// 	stream << std::setw(fast->m_length) << std::setfill('_') << "";
+			// 	first += dif + fast->m_length;
+			// 	fast = fast->m_next;
+			// }
+			// stream << setw(&m_pool[]-first) << setfill('#') << "";
 			
 			return stream;
-		} 
+		}
+
+
 
 	}; // SLPool class
 } //namespace mp

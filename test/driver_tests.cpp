@@ -18,8 +18,7 @@ int main()
     using byte = char; // 1 byte
     const short n_blocks(2); // How many blocks per chunk
     const short chunk( n_blocks*BLOCK_SIZE ); // Each chunk ideally should have 1 or more blocks.
-    // const short header_sz_t (mp::SLPool<BLOCK_SIZE>::HEADER_SZ)
-    // const short area_metainfo( mp::SLPool<BLOCK_SIZE>::TAG_SZ + header_sz_t );
+    // const short area_metainfo( mp::SLPool<BLOCK_SIZE>::TAG_SZ + mp::SLPool<BLOCK_SIZE>::HEADER_SZ );
 
     // We need MP large enough to hold 7 separate chunks of memory.
     const short n_chunks(7); // 7 pieces of 32 bytes
@@ -30,7 +29,7 @@ int main()
     mp::SLPool<BLOCK_SIZE> q( sizeof(byte) * chunk * n_chunks );
     std::cout << "Allocating 3 int... ";
     int * int_ptr = (int *)q.Allocate( sizeof(int) * 3 );
-    std::cout << "Done!\n";  
+    std::cout << "Done!\n";
     int_ptr[0] = 0;
     int_ptr[1] = 2;
     int_ptr[2] = 6;
@@ -39,7 +38,7 @@ int main()
     q.Free(int_ptr);
     std::cout << "Done!\n";
 
-    std::cout << ">>> Using new and delete:\n";
+    std::cout << "\n>>> Using new and delete:\n";
     mp::SLPool<BLOCK_SIZE> r( sizeof(byte) * chunk * n_chunks );
     std::cout << "Allocating 3 int using new... ";
     int * int_ptr2 = new (r) int[ 3 ];
@@ -52,11 +51,22 @@ int main()
     delete [] int_ptr2;
     std::cout << "Done!\n";
 
+    std::cout << "\n>>> Allocating 2 arrays:\n";
+    mp::SLPool<BLOCK_SIZE> s( sizeof(byte) * chunk * n_chunks );
+    std::cout << "Allocating 2 arrays using new... ";
+    int * a = new (s) int[ sizeof(int) * 1 ];
+    int * b = new (s) int[ sizeof(int) * 2 ];
+    std::cout << "Done!\n";
+    std::cout << "Delleting... ";
+    delete [] a;
+    delete [] b;
+    std::cout << "Done!\n";
+
 
 
     std::cout << "\n>>> Begining DATA INTEGRITY tests...\n\n";
 
-    {
+    // {
         // Set up 7 chunks of data.
         // We decrease the area metainfo so we might suppport a single reserved area
         // with the size of the entire pool.
@@ -92,7 +102,7 @@ int main()
 
         // std::cout << ">>> Testing pool integrity after writing the entire pool... ";
         // std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
-    }
+    // }
 
    //  {
    //      // Set up 7 chunks of data.
