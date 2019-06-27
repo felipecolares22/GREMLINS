@@ -58,7 +58,7 @@ namespace mp
 	public:
 		/// Constructor
 		explicit SLPool( size_t num_blk )
-			: m_n_blocks{ (unsigned int) std::ceil( (num_blk + sizeof( Header )) / BLK_SIZE ) + 1u },
+			: m_n_blocks{ (unsigned int) std::ceil( static_cast<float>(num_blk) / BLK_SIZE ) + 1u },
 			m_pool{ new Block[m_n_blocks] },
 			m_sentinel{ m_pool[m_n_blocks - 1] }
 		{
@@ -77,7 +77,7 @@ namespace mp
 		{
 			Block *fast = this->m_sentinel.m_next;
 			Block *slow = &this->m_sentinel;
-			size_t num_blocks = std::ceil( (tot_size + sizeof( Header ))/BLK_SIZE );
+			size_t num_blocks = std::ceil( static_cast<float>(tot_size)/BLK_SIZE );
 
 			while( fast != nullptr )
 			{

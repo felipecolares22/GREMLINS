@@ -41,7 +41,7 @@ void operator delete( void * arg )
 {
 	mp::Tag * const tag = reinterpret_cast< mp::Tag * >( arg ) - 1U;
 	if( nullptr != tag->pool )
-		tag->pool->Free(tag);
+		tag->pool->Free(arg);
 	else
 		std::free( tag );
 }
@@ -50,7 +50,7 @@ void operator delete[]( void * arg )
 {
 	mp::Tag * const tag = reinterpret_cast< mp::Tag * >( arg ) - 1U;
 	if( nullptr != tag->pool )
-		tag->pool->Free(tag);
+		tag->pool->Free(arg);
 	else
 		std::free( tag );
 }

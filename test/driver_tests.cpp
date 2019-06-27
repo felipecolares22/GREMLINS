@@ -25,9 +25,36 @@ int main()
     const short n_chunks(7); // 7 pieces of 32 bytes
 
     std::cout << ">>> My tests\n\n";
-    mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
 
-    std::cout << ">>> Begining DATA INTEGRITY tests...\n\n";
+    std::cout << ">>> Using .Allocate and .Free:\n";
+    mp::SLPool<BLOCK_SIZE> q( sizeof(byte) * chunk * n_chunks );
+    std::cout << "Allocating 3 int... ";
+    int * int_ptr = (int *)q.Allocate( sizeof(int) * 3 );
+    std::cout << "Done!\n";  
+    int_ptr[0] = 0;
+    int_ptr[1] = 2;
+    int_ptr[2] = 6;
+    std::cout << int_ptr[0] << " " << int_ptr[1] << " " << int_ptr[2] << " = 0 2 6"<< std::endl;
+    std::cout << "Delleting... ";
+    q.Free(int_ptr);
+    std::cout << "Done!\n";
+
+    std::cout << ">>> Using new and delete:\n";
+    mp::SLPool<BLOCK_SIZE> r( sizeof(byte) * chunk * n_chunks );
+    std::cout << "Allocating 3 int using new... ";
+    int * int_ptr2 = new (r) int[ 3 ];
+    std::cout << "Done!\n";  
+    int_ptr2[0] = 0;
+    int_ptr2[1] = 2;
+    int_ptr2[2] = 6;
+    std::cout << int_ptr2[0] << " " << int_ptr2[1] << " " << int_ptr2[2] << " = 0 2 6"<< std::endl;
+    std::cout << "Delleting using delete... ";
+    delete [] int_ptr2;
+    std::cout << "Done!\n";
+
+
+
+    std::cout << "\n>>> Begining DATA INTEGRITY tests...\n\n";
 
     {
         // Set up 7 chunks of data.
@@ -301,31 +328,31 @@ int main()
 
     std::cout << ">>> Begining LIST INTEGRITY tests...\n\n";
 
-    {
-        // Set up 7 chunks of data.
-        // We decrease the area metainfo so we might suppport a single reserved area
-        // with the size of the entire pool.
-        mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
-        //std::cout << p << std::endl;
+    // {
+    //     // Set up 7 chunks of data.
+    //     // We decrease the area metainfo so we might suppport a single reserved area
+    //     // with the size of the entire pool.
+    //     mp::SLPool<BLOCK_SIZE> p( sizeof(byte) * chunk * n_chunks );
+    //     //std::cout << p << std::endl;
 
-        auto passed(true);
-        byte *temp;
-        try {
-            temp = new (p) byte[ sizeof(byte)*chunk*n_chunks ];
-        }
-        catch( const std::bad_alloc & e )
-        {
-            passed = false;
-        }
-        catch( const std::runtime_error & e )
-        {
-            passed = false;
-        }
-        std::cout << ">>> Allocating a single block with length equal to the entire pool size... ";
-        std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
+    //     auto passed(true);
+    //     byte *temp;
+    //     try {
+    //         temp = new (p) byte[ sizeof(byte)*chunk*n_chunks ];
+    //     }
+    //     catch( const std::bad_alloc & e )
+    //     {
+    //         passed = false;
+    //     }
+    //     catch( const std::runtime_error & e )
+    //     {
+    //         passed = false;
+    //     }
+    //     std::cout << ">>> Allocating a single block with length equal to the entire pool size... ";
+    //     std::cout << (passed ? "\e[1;35mpassed!\e[0m" : "\e[1;31mfailed!\e[0m") << std::endl;
         
-        delete [] temp;
-    }
+    //     delete [] temp;
+    // }
 
 
     // {
